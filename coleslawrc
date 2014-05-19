@@ -1,0 +1,20 @@
+(("/home/kenanb/web/kenanb.com/src/" . (:author "Kenan Bölükbaşı"
+					:deploy-dir "/home/kenanb/dev/web/kenanb.com/"
+					:domain "http://www.kenanb.com"
+					:feeds ("code")
+					:plugins ((sitemap)
+;;;						  (disqus :shortname "kenanb")
+						  (analytics :tracking-code "UA-46458380-1"))
+					:sitenav ((:url "/posts/about.html"				:name "ABOUT")
+						  (:url "/tag/portfolio.html" 				:name "PORTFOLIO"))
+					:tagnav  ((:url "/tag/code.html"				:name "CODE")
+						  (:url "/tag/game.html" 				:name "GAME")
+						  (:url "/tag/graphics.html"				:name "GRAPHICS")
+						  (:url "/tag/design.html" 				:name "DESIGN"))
+					:connav  ((:url "http://www.blendernetwork.org/kenan-bolukbasi" :name "blender-network")
+						  (:url "http://github.com/kenanb" 			:name "github @kenanb")
+						  (:url "http://twitter.com/kenanbolukbasi"		:name "twitter: @kenanbolukbasi")
+						  (:url "#" 				  		:name "kenanbolukbasi@gmail.com"))
+					:staging-dir "/tmp/kenanb.com/"
+					:title "kenan-bolukbasi.log"
+					:theme "readable")))

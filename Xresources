@@ -1,0 +1,5 @@
+XTerm*faceName: DejaVu Sans Mono
+XTerm*faceSize: 18
+XTerm*renderFont: true
+XTerm*foreground: rgb:d2/d2/d2
+XTerm*background: rgb:08/08/28
