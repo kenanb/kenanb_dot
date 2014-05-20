@@ -28,7 +28,10 @@
  'undo-tree 'rainbow-mode
  'rainbow-delimiters 'wgrep
  'litable 'adaptive-wrap
- 'shell-pop 'shell-switcher)
+ 'shell-pop 'shell-switcher
+ 'dired+ 'dired-details+
+ 'dired-rainbow 'dired-subtree
+ 'dired-toggle)
 
 ;; THEME
 (load-theme 'monokai t)
@@ -80,7 +83,31 @@
   (interactive)
   (unless (string-match-p "^ " (buffer-name))
     (rename-buffer (concat " " (buffer-name)))))
-(global-set-key (kbd "<f5>") 'make-buffer-uninteresting)
+(global-set-key (kbd "<f9>") 'make-buffer-uninteresting)
+
+;; DIRED
+(require 'dired-details+)
+(require 'dired-subtree)
+(setq dired-toggle-window-size 40
+      dired-toggle-window-side 'left)
+(defun dired-subtree-insert-refresh ()
+  (interactive)
+  (dired-subtree-insert)
+  (revert-buffer))
+(defun dired-subtree-remove-refresh ()
+  (interactive)
+  (dired-subtree-remove)
+  (revert-buffer))
+(defun dired-subtree-keys ()
+  (local-set-key (kbd "<f6>") 'dired-subtree-remove-refresh)
+  (local-set-key (kbd "<f7>") 'dired-subtree-insert-refresh))
+(global-set-key (kbd "<f5>") 'dired-toggle)
+(add-hook 'dired-mode-hook 'dired-subtree-keys)
+(add-hook 'dired-toggle-mode-hook
+          (lambda () (interactive)
+            (visual-line-mode 1)
+            (setq-local visual-line-fringe-indicators '(nil right-curly-arrow))
+            (setq-local word-wrap t)))
 
 ;; COMMON LISP
 (require 'cl)
