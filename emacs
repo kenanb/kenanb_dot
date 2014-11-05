@@ -1,9 +1,10 @@
 ;; PACKAGE
 (require 'package)
 (setq package-archives 
-      '(("gnu"      . "http://elpa.gnu.org/packages/")
-	("melpa"     . "http://melpa.milkbox.net/packages/")
-	("marmalade" . "http://marmalade-repo.org/packages/")))
+      '(("gnu"          . "http://elpa.gnu.org/packages/")
+        ("melpa"        . "http://melpa.milkbox.net/packages/")
+        ("melpa-stable" . "http://melpa-stable.milkbox.net/packages")
+        ("marmalade"    . "http://marmalade-repo.org/packages/")))
 (package-initialize)
 (defun ensure-package-installed (&rest packages)
   (mapcar
@@ -19,7 +20,7 @@
 (ensure-package-installed 
  'ac-slime 'auto-complete
  'paredit 'elpy 'better-defaults
- 'redshank 'smex 'string-inflection
+ 'redshank 'string-inflection
  'markdown-mode 'magit
  'monokai-theme 'iedit
  'ido 'idomenu 'popup
@@ -31,7 +32,7 @@
  'shell-pop 'shell-switcher
  'dired+ 'dired-details+
  'dired-rainbow 'dired-subtree
- 'dired-toggle)
+ 'dired-toggle 'org-trello)
 
 ;; THEME
 (load-theme 'monokai t)
@@ -47,7 +48,6 @@
 (set-window-fringes nil 0 0)
 (global-hl-line-mode t)
 (add-hook 'visual-line-mode-hook '(lambda () (adaptive-wrap-prefix-mode (if visual-line-mode 1 -1))))
-(global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "RET") 'newline-and-indent)
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -86,8 +86,19 @@
 (global-set-key (kbd "<f9>") 'make-buffer-uninteresting)
 
 ;; DIRED
-(require 'dired-details+)
+(require 'dired+)
 (require 'dired-subtree)
+;; (require 'dired-details+)
+;; (defconst dired-audio-files-extensions
+;;   '("mp3" "MP3" "ogg" "OGG" "flac" "FLAC" "wav" "WAV")
+;;   "Dired Audio files extensions")
+;; (dired-rainbow-define audio "#329EE8" dired-audio-files-extensions)
+
+;; (defconst dired-video-files-extensions
+;;   '("vob" "VOB" "mkv" "MKV" "mpe" "mpg" "MPG" "mp4" "MP4" "ts" "TS" "m2ts"
+;;     "M2TS" "avi" "AVI" "mov" "MOV" "wmv" "asf" "m2v" "m4v" "mpeg" "MPEG" "tp")
+;;   "Dired Video files extensions")
+;; (dired-rainbow-define video "#B3CCFF" dired-video-files-extensions)
 (setq dired-toggle-window-size 40
       dired-toggle-window-side 'left)
 (defun dired-subtree-insert-refresh ()
@@ -157,7 +168,6 @@
 ;; PYTHON
 (elpy-enable)
 (elpy-use-ipython)
-(elpy-clean-modeline)
 (add-hook 'python-mode-hook
 	  '(lambda () (eldoc-mode 1)) t)
 
@@ -172,6 +182,10 @@
 (add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
+;; AUCTEX
+(add-hook 'LaTeX-mode-hook (lambda ()
+                             (TeX-fold-mode 1)))
 
 ;; BROWSER
 (setq browse-url-generic-program (executable-find "firefox"))
@@ -190,7 +204,7 @@
                         emms-player-ogg123
                         emms-player-mplayer))
     (emms-all)
-    (when (file-exists-p "~/doc/music/kenanb.m3u")
+    (when (file-exists-p "~/doc/music/kenanb.list")
       (emms-add-directory-tree "~/doc/music/")
       (emms-shuffle))))
 (require 'emms-setup)
@@ -215,3 +229,22 @@
                                       "#hy" "#stumpwm" "#concatenative"
                                       "#blender" "#blendercoders"
                                       "#blenderpython" "#yafaray" "#luxrender"))))
+
+;; TRELLO
+(require 'org-trello)
+
+
+;; CUSTOM
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-export-backends (quote (ascii html icalendar latex md))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
