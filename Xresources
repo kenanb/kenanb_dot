@@ -1,5 +1,5 @@
 XTerm*faceName: DejaVu Sans Mono
-XTerm*faceSize: 18
+XTerm*faceSize: 13
 XTerm*renderFont: true
-XTerm*foreground: rgb:d2/d2/d2
-XTerm*background: rgb:08/08/28
+XTerm*foreground: rgb:ff/ee/88
+XTerm*background: rgb:18/28/28

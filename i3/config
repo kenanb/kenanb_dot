@@ -13,7 +13,8 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
-font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+font "pango:UbuntuMono Bold 10"
 # The font above is very space-efficient, that is, it looks good, sharp and
 # clear in small sizes. However, if you need a lot of unicode glyphs or
 # right-to-left text rendering, you should instead use pango for rendering and
@@ -84,7 +85,7 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 # focus the child container
-#bindsym $mod+d focus child
+bindsym $mod+z focus child
 
 # switch to workspace
 bindsym $mod+1 workspace 1
@@ -125,16 +126,16 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym scedilla resize grow width 10 px or 10 ppt
+        bindsym j resize shrink width 5 px or 5 ppt
+        bindsym k resize grow height 5 px or 5 ppt
+        bindsym l resize shrink height 5 px or 5 ppt
+        bindsym scedilla resize grow width 5 px or 5 ppt
 
         # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
+        bindsym Left resize shrink width 5 px or 5 ppt
+        bindsym Down resize grow height 5 px or 5 ppt
+        bindsym Up resize shrink height 5 px or 5 ppt
+        bindsym Right resize grow width 5 px or 5 ppt
 
         # back to normal: Enter or Escape
         bindsym Return mode "default"
@@ -146,19 +147,25 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        status_command i3status
+    status_command i3status
+#    status_command echo '{"version":1}[[],'; xtitle -s -f '[{"full_text": "%s"}],'
 }
 
-set $web firefox
-set $tor tor-browser-en
+new_window pixel 5
+new_float pixel 5
+hide_edge_borders none
+
+# class                 border  backgr. text    indicator
+client.focused          #bb7722 #bb7722 #111144 #3333ee
+client.focused_inactive #332211 #332211 #cccccc #333366
+client.unfocused        #111111 #111111 #888888 #292d2e
+client.urgent           #900000 #900000 #eeeeee #900000
+
 bindsym $mod+e exec emacsclient -c
-bindsym $mod+Shift+e exec emacsclient -e '(save-buffers-kill-emacs)'
-for_window [class="SMplayer" ] floating enable
-for_window [class="Mplayer" ] floating enable
-for_window [class="Blender" ] border none
-for_window [class="Emacs" ] border none
-for_window [class="Firefox" ] border none
-for_window [class="Gimp" ] floating enable
-for_window [class="Synfig Studio" ] floating enable
-for_window [class="Skype" ] floating enable
+
+for_window [class="Synfig Studio"] floating enable
+for_window [class="Skype"]         floating enable
+for_window [class="ja2"]           fullscreen
+
 exec emacs --daemon &
+# exec compton --backend glx &

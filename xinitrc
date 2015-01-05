@@ -11,7 +11,9 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
   unset f
 fi
 
+xbindkeys
+setxkbmap -layout tr -option ctrl:swapcaps
+xsetwacom --set 8 MapToOutput "1440x900+0+0"
+./.fehbg
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
-xinput set-prop "ETPS/2 Elantech Touchpad" "Synaptics ClickPad" 1 &
-syndaemon -t -k -i 2 -d &
 exec i3
