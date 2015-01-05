@@ -63,6 +63,7 @@
 (global-set-key (kbd "RET") 'newline-and-indent)
 (global-unset-key (kbd "C-z")) ; useless in GUI mode.
 (global-set-key (kbd "C-z C-c") 'compile)
+(global-set-key (kbd "C-c m") 'magit-status)
 (global-set-key (kbd "C-c f") 'find-function)
 (defalias 'yes-or-no-p 'y-or-n-p)
 ;; Put autosaves in their place (not in current dir)
