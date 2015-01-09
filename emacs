@@ -21,17 +21,24 @@
     (package-refresh-contents))
 (ensure-package-installed
  'ac-slime 'auto-complete 'paredit 'elpy 'better-defaults 'wgrep
- 'redshank 'string-inflection 'markdown-mode 'magit 'imenu
- 'flymake-lua 'lua-mode 'helm 'highlight-indentation 'iedit
+ 'redshank 'string-inflection 'markdown-mode 'magit 'imenu 'flycheck
+ 'lua-mode 'helm 'highlight-indentation 'iedit 'twittering-mode
  'emms 'pov-mode 'auctex 'undo-tree 'rainbow-mode 'monokai-theme
  'litable 'adaptive-wrap 'rainbow-delimiters 'shell-pop 'ggtags
- 'shell-switcher 'dired+ 'popwin 'popup 'command-log-mode)
+ 'shell-switcher 'dired+ 'popwin 'popup 'command-log-mode 'help-fns+
+ 'latex-preview-pane 'smart-mode-line 'smart-mode-line-powerline-theme)
 
 ;; GLOBAL
 (require 'dired+)
 (require 'shell-pop)
 (require 'auto-complete)
 (require 'auto-complete-config)
+(require 'smart-mode-line)
+(setq sml/no-confirm-load-theme t)
+(setq sml/theme 'powerline)
+(load-theme 'monokai t)
+(sml/setup)
+(load-theme 'smart-mode-line-powerline t)
 (setq org-replace-disputed-keys t) ; only works if set before Helm loads org.el.
 (autoload 'gtags-mode "gtags" "" t)
 (ac-config-default)
@@ -81,6 +88,8 @@
 (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "S-C-<down>") 'shrink-window)
 (global-set-key (kbd "S-C-<up>") 'enlarge-window)
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
 ;; BUFFER SWITCHING
 (defun regexp-next-buffer ()
@@ -170,7 +179,7 @@
 ;; undo-tree
 (push '(" *undo-tree*" :width 0.3 :position right) popwin:special-display-config)
 
-;; COMMON LISP
+;; LISP
 (require 'cl)
 (load (expand-file-name "~/dev/lisp/slime-helper.el"))
 (setq inferior-lisp-program "sbcl")
@@ -183,6 +192,9 @@
                slime-media))
 (eval-after-load "redshank-loader"
   `(redshank-setup '(lisp-mode-hook slime-repl-mode-hook) t))
+(add-hook 'emacs-lisp-mode-hook #'turn-on-eldoc-mode)
+(add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 (autoload 'enable-paredit-mode "paredit" t)
 (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
 (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
@@ -230,9 +242,7 @@
 (autoload 'lua-mode "lua-mode" "Lua editing mode." t)
 (add-to-list 'auto-mode-alist '("\\.lua$" . lua-mode))
 (add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
-(require 'flymake-lua)
 (setq lua-indent-level 4)
-(add-hook 'lua-mode-hook #'flymake-lua-load)
 (add-hook 'lua-mode-hook #'auto-complete-mode)
 (add-hook 'lua-mode-hook #'(lambda () (gtags-mode 1)))
 (add-hook 'lua-mode-hook #'ggtags-mode)
@@ -250,7 +260,8 @@
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
-;; AUCTEX
+;; LATEX
+(latex-preview-pane-enable)
 (defun TeX-fold-and-PDF-on () (progn (TeX-fold-mode 1)
                                      (TeX-PDF-mode-on)))
 (add-hook 'LaTeX-mode-hook #'TeX-fold-and-PDF-on)
@@ -360,10 +371,6 @@
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
  '(compilation-message-face (quote default))
- '(custom-enabled-themes (quote (monokai)))
- '(custom-safe-themes
-   (quote
-    ("1e7e097ec8cb1f8c3a912d7e1e0331caeed49fef6cff220be63bd2a6ba4cc365" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" "64581032564feda2b5f2cf389018b4b9906d98293d84d84142d90d7986032d33" "b7d8113de2f7d9a3cf42335d8eed8415b5a417e7f6382e59076f9f4ae4fa4cee" default)))
  '(fci-rule-color "#49483E")
  '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
  '(highlight-tail-colors
@@ -377,6 +384,7 @@
      ("#A41F99" . 85)
      ("#49483E" . 100))))
  '(magit-diff-use-overlays nil)
+ '(magit-use-overlays nil)
  '(org-babel-load-languages
    (quote
     ((emacs-lisp . t)
@@ -408,6 +416,7 @@
      ("\\.blend\\'" async-shell-command
       (concat "blender " file)))))
  '(org-html-html5-fancy t)
+ '(send-mail-function (quote mailclient-send-it))
  '(shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda nil (eshell)))))
  '(shell-pop-universal-key "C-t")
  '(shell-pop-window-height 15)
@@ -432,7 +441,4 @@
      (320 . "#2896B5")
      (340 . "#2790C3")
      (360 . "#66D9EF"))))
- '(vc-annotate-very-old-color nil)
- '(weechat-color-list
-   (quote
-    (unspecified "#272822" "#49483E" "#A20C41" "#F92672" "#67930F" "#A6E22E" "#968B26" "#E6DB74" "#21889B" "#66D9EF" "#A41F99" "#FD5FF0" "#349B8D" "#A1EFE4" "#F8F8F2" "#F8F8F0"))))
+ '(vc-annotate-very-old-color nil))
