@@ -151,8 +151,8 @@ bar {
 #    status_command echo '{"version":1}[[],'; xtitle -s -f '[{"full_text": "%s"}],'
 }
 
-new_window pixel 5
-new_float pixel 5
+new_window pixel 3
+new_float pixel 3
 hide_edge_borders none
 
 # class                 border  backgr. text    indicator

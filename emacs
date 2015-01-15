@@ -26,7 +26,7 @@
  'emms 'pov-mode 'auctex 'undo-tree 'rainbow-mode 'monokai-theme
  'litable 'adaptive-wrap 'rainbow-delimiters 'shell-pop 'ggtags
  'shell-switcher 'dired+ 'popwin 'popup 'command-log-mode 'help-fns+
- 'latex-preview-pane 'smart-mode-line 'smart-mode-line-powerline-theme)
+ 'latex-preview-pane 'smart-mode-line)
 
 ;; GLOBAL
 (require 'dired+)
@@ -34,11 +34,12 @@
 (require 'auto-complete)
 (require 'auto-complete-config)
 (require 'smart-mode-line)
+(require 'epa-file)
+(epa-file-enable)
 (setq sml/no-confirm-load-theme t)
-(setq sml/theme 'powerline)
+(setq sml/theme 'dark)
 (load-theme 'monokai t)
 (sml/setup)
-(load-theme 'smart-mode-line-powerline t)
 (setq org-replace-disputed-keys t) ; only works if set before Helm loads org.el.
 (autoload 'gtags-mode "gtags" "" t)
 (ac-config-default)
@@ -113,6 +114,19 @@
 (global-set-key [remap next-buffer] 'regexp-next-buffer)
 (global-set-key [remap previous-buffer] 'regexp-previous-buffer)
 
+;; GNUS
+(setq gnus-directory "~/.emacs.d/news/")
+(setq message-directory "~/.emacs.d/mail/")
+(setq nnfolder-directory "~/.emacs.d/mail/archive")
+(defun gnus-switch-to-group-buffer ()
+  "Switch to gnus group buffer if it exists, otherwise start gnus."
+  (interactive)
+  (if (and (fboundp 'gnus-alive-p)
+           (gnus-alive-p))
+      (switch-to-buffer-other-window gnus-group-buffer)
+    (gnus)))
+(global-set-key (kbd "C-x g") 'gnus-switch-to-group-buffer)
+
 ;; HELM
 (require 'helm)
 (require 'helm-config)
@@ -150,6 +164,7 @@
       helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
       helm-ff-file-name-history-use-recentf t)
 
+
 ;; POPWIN
 (require 'popwin)
 (popwin-mode 1)
@@ -178,6 +193,8 @@
 (push "*vc-change-log*" popwin:special-display-config)
 ;; undo-tree
 (push '(" *undo-tree*" :width 0.3 :position right) popwin:special-display-config)
+;; Gnus
+(push 'gnus-group-mode popwin:special-display-config)
 
 ;; LISP
 (require 'cl)
@@ -391,6 +408,7 @@
      (awk . t)
      (C . t)
      (calc . t)
+     (ditaa . t)
      (gnuplot . t)
      (latex . t)
      (ledger . t)
@@ -403,6 +421,8 @@
      (scheme . t)
      (sh . t)
      (sqlite . t))))
+ '(org-ditaa-eps-jar-path "/usr/share/java/ditaa-eps/DitaaEps.jar")
+ '(org-ditaa-jar-path "/usr/share/java/ditaa/ditaa.jar")
  '(org-file-apps
    (quote
     ((auto-mode . emacs)
