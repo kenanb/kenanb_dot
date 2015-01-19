@@ -388,6 +388,7 @@
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
  '(compilation-message-face (quote default))
+ '(doc-view-continuous t)
  '(fci-rule-color "#49483E")
  '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
  '(highlight-tail-colors
@@ -462,3 +463,5 @@
      (340 . "#2790C3")
      (360 . "#66D9EF"))))
  '(vc-annotate-very-old-color nil))
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
