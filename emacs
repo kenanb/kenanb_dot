@@ -290,6 +290,8 @@
 (require 'org-mouse)
 (require 'ledger-mode)
 (require 'ob-lua)
+(add-to-list 'load-path "/usr/share/asymptote/")
+(require 'asy-init)
 (setq org-startup-indented t
       org-startup-with-inline-images t
       org-image-actual-width 256
@@ -406,10 +408,12 @@
  '(org-babel-load-languages
    (quote
     ((emacs-lisp . t)
+     (asymptote . t)
      (awk . t)
      (C . t)
      (calc . t)
      (ditaa . t)
+     (dot . t)
      (gnuplot . t)
      (latex . t)
      (ledger . t)
