@@ -290,6 +290,7 @@
 (require 'org-mouse)
 (require 'ledger-mode)
 (require 'ob-lua)
+(add-to-list 'load-path "/usr/share/asymptote/")
 (load-file "/usr/share/asymptote/asy-init.el")
 (setq org-startup-indented t
       org-startup-with-inline-images t
