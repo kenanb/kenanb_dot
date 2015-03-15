@@ -67,6 +67,7 @@
 (global-hl-line-mode 1)
 (setq compilation-scroll-output t)
 ;; (setq compilation-scroll-output 'first-error)
+(add-to-list 'warning-suppress-types '(undo discard-info))
 (add-hook 'visual-line-mode-hook '(lambda () (adaptive-wrap-prefix-mode (if visual-line-mode 1 -1))))
 (global-set-key (kbd "RET") 'newline-and-indent)
 (global-unset-key (kbd "C-z")) ; useless in GUI mode.
