@@ -67,7 +67,6 @@
 (global-hl-line-mode 1)
 (setq compilation-scroll-output t)
 ;; (setq compilation-scroll-output 'first-error)
-(add-to-list 'warning-suppress-types '(undo discard-info))
 (add-hook 'visual-line-mode-hook '(lambda () (adaptive-wrap-prefix-mode (if visual-line-mode 1 -1))))
 (global-set-key (kbd "RET") 'newline-and-indent)
 (global-unset-key (kbd "C-z")) ; useless in GUI mode.
@@ -523,6 +522,7 @@
      (320 . "#2896B5")
      (340 . "#2790C3")
      (360 . "#66D9EF"))))
- '(vc-annotate-very-old-color nil))
+ '(vc-annotate-very-old-color nil)
+ '(warning-suppress-types (quote ((undo discard-info)))))
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
