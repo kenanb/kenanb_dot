@@ -309,6 +309,7 @@
 (setq org-agenda-include-all-todo t)
 (setq org-agenda-include-diary t)
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
+(setq org-default-notes-file "~/.notes.org")
 (defun org-tangle-run-linux ()
   (interactive)
   (make-local-variable 'compilation-read-command)
