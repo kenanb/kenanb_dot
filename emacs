@@ -485,7 +485,7 @@
  '(org-html-html5-fancy t)
  '(org-latex-classes
    (quote
-    (("extarticle" "\\documentclass[a4paper,8pt]{extarticle}\\usepackage[cm]{fullpage}\\usepackage{morefloats}"
+    (("extarticle" "\\documentclass{extarticle}"
       ("\\section{%s}" . "\\section*{%s}")
       ("\\subsection{%s}" . "\\subsection*{%s}")
       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
