@@ -166,7 +166,3 @@ bindsym $mod+e exec emacsclient -c
 
 for_window [class="Synfig Studio"] floating enable
 for_window [class="Skype"]         floating enable
-for_window [class="ja2"]           fullscreen
-
-exec emacs --daemon &
-# exec compton --backend glx &
