@@ -26,7 +26,7 @@
  'emms 'pov-mode 'auctex 'undo-tree 'rainbow-mode 'monokai-theme
  'litable 'adaptive-wrap 'rainbow-delimiters 'shell-pop 'ggtags
  'shell-switcher 'dired+ 'popwin 'popup 'command-log-mode 'help-fns+
- 'latex-preview-pane 'smart-mode-line)
+ 'latex-preview-pane 'smart-mode-line 'flymake-json 'fold-dwim-org)
 
 ;; GLOBAL
 (require 'dired+)
@@ -60,13 +60,14 @@
 (add-to-list 'default-frame-alist '(alpha 99 99))
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 (setq mouse-wheel-progressive-speed nil)
-(set-default-font "6x13")
-(add-to-list 'default-frame-alist '(font . "6x13"))
+(set-default-font "Fixed-8")
+(add-to-list 'default-frame-alist '(font . "Fixed-8"))
 (column-number-mode 1)
 (set-window-fringes nil 0 0)
 (global-hl-line-mode 1)
-(setq compilation-scroll-output t)
-;; (setq compilation-scroll-output 'first-error)
+;; (setq compilation-scroll-output t)
+(setq magit-last-seen-setup-instructions "1.4.0")
+(setq compilation-scroll-output 'first-error)
 (add-hook 'visual-line-mode-hook '(lambda () (adaptive-wrap-prefix-mode (if visual-line-mode 1 -1))))
 (global-set-key (kbd "RET") 'newline-and-indent)
 (global-unset-key (kbd "C-z")) ; useless in GUI mode.
@@ -198,7 +199,7 @@
 
 ;; LISP
 (require 'cl)
-(load (expand-file-name "~/dev/lisp/slime-helper.el"))
+(load (expand-file-name "~/.lisp/slime-helper.el"))
 (setq inferior-lisp-program "sbcl")
 (slime-setup '(slime-repl
                slime-asdf
@@ -236,6 +237,10 @@
       '(("HyperSpec" . eww-browse-url) ("." . browse-url-default-browser)))
 
 ;; C/C++
+(global-ede-mode 1)
+(require 'semantic/sb)
+(semantic-mode 1)
+(require 'fold-dwim-org)
 (setq-default
  fill-column 79
  tramp-default-method "ssh"
@@ -246,7 +251,10 @@
  c-indent-level 4
  c-basic-offset 4)
 (add-hook 'c-mode-common-hook #'ggtags-mode)
+(add-hook 'c-mode-common-hook #'hs-minor-mode)
+(add-hook 'c-mode-common-hook #'fold-dwim-org/minor-mode)
 (add-hook 'c-mode-common-hook '(lambda () (auto-fill-mode 1)))
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
 ;; PYTHON
 (elpy-enable)
@@ -327,6 +335,9 @@
             (define-key org-mode-map "\C-n" 'org-next-link)
             (define-key org-mode-map "\C-p" 'org-previous-link)))
 
+;; JS
+(global-set-key (kbd "C-c j v") 'flymake-json-load)
+(global-set-key (kbd "C-c j s") 'elpy-flymake-show-error)
 
 ;; ESHELL
 (defun ac-pcomplete ()
@@ -390,22 +401,13 @@
 (global-set-key [(f9)] 'gnuplot-make-buffer)
 
 ;; EMMS
-(eval-after-load "emms"
-  '(progn
-    (require 'emms)
-    (require 'emms-player-simple)
-    (require 'emms-player-mplayer)
-    (require 'emms-source-file)
-    (require 'emms-source-playlist)
-    (setq
-     emms-player-list '(emms-player-mpg321
-                        emms-player-ogg123
-                        emms-player-mplayer))
-    (emms-all)
-    (when (file-exists-p "~/doc/media/music/music.list")
-      (emms-add-directory-tree "~/doc/media/music/")
-      (emms-shuffle))))
 (require 'emms-setup)
+(emms-all)
+(emms-default-players)
+(eval-after-load "emms"
+  (when (file-exists-p "~/doc/media/music/music.list")
+    (emms-add-directory-tree "~/doc/media/music/")
+    (emms-shuffle)))
 
 ;; CUSTOM
 (custom-set-faces
@@ -432,6 +434,7 @@
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
  '(compilation-message-face (quote default))
+ '(compilation-skip-threshold 2)
  '(doc-view-continuous t)
  '(fci-rule-color "#49483E")
  '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
