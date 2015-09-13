@@ -66,7 +66,6 @@
 (set-window-fringes nil 0 0)
 (global-hl-line-mode 1)
 ;; (setq compilation-scroll-output t)
-(setq magit-last-seen-setup-instructions "1.4.0")
 (setq compilation-scroll-output 'first-error)
 (add-hook 'visual-line-mode-hook '(lambda () (adaptive-wrap-prefix-mode (if visual-line-mode 1 -1))))
 (global-set-key (kbd "RET") 'newline-and-indent)
@@ -75,6 +74,7 @@
 (global-set-key (kbd "C-c m") 'magit-status)
 (global-set-key (kbd "C-c f") 'find-function)
 (defalias 'yes-or-no-p 'y-or-n-p)
+(setq magit-last-seen-setup-instructions "1.4.0")
 ;; Put autosaves in their place (not in current dir)
 (defvar autosave-dir "~/.emacs.d/autosaves/")
 (setq auto-save-file-name-transforms `((".*" ,autosave-dir t)))
@@ -85,6 +85,8 @@
 ;; windmove config
 (windmove-default-keybindings)
 (setq windmove-wrap-around t)
+(global-unset-key (kbd "C-<left>")) ; Confusing because behaviour is different it paredit.
+(global-unset-key (kbd "C-<right>")) ; Confusing because behaviour is different it paredit.
 ;;; shrink/enlarge windows
 (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
