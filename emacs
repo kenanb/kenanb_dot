@@ -201,15 +201,25 @@
 
 ;; LISP
 (require 'cl)
-(load (expand-file-name "~/.lisp/slime-helper.el"))
+(load (expand-file-name "~/dev/lisp/slime-helper.el"))
 (setq inferior-lisp-program "sbcl")
 (slime-setup '(slime-repl
                slime-asdf
                slime-fancy
                slime-fuzzy
+               slime-c-p-c
                slime-banner
+               slime-fancy-inspector
+               slime-references
+               slime-xref-browser
+               slime-highlight-edits
+               slime-scratch
+               slime-trace-dialog
+               slime-sprof
                slime-indentation
                slime-media))
+;; (setq slime-complete-symbol-function 'slime-fuzzy-complete-symbol)
+;; (setq slime-fuzzy-completion-in-place t)
 (eval-after-load "redshank-loader"
   `(redshank-setup '(lisp-mode-hook slime-repl-mode-hook) t))
 (add-hook 'emacs-lisp-mode-hook #'turn-on-eldoc-mode)
@@ -234,6 +244,8 @@
   '(add-to-list 'ac-modes 'slime-repl-mode))
 (add-hook 'slime-mode-hook #'auto-complete-mode)
 (add-hook 'slime-repl-mode-hook #'auto-complete-mode)
+(add-hook 'slime-mode-hook #'(lambda () (add-to-list 'ac-sources 'ac-source-slime-fuzzy)))
+(add-hook 'slime-repl-mode-hook #'(lambda () (add-to-list 'ac-sources 'ac-source-slime-fuzzy)))
 ;; (load (expand-file-name "~/dev/lisp/clhs-use-local.el") t)
 (setq browse-url-browser-function
       '(("HyperSpec" . eww-browse-url) ("." . browse-url-default-browser)))
@@ -424,7 +436,8 @@
  '(org-level-3 ((t (:inherit variable-pitch :foreground "#66D9EF" :height 1.0))))
  '(org-level-4 ((t (:inherit variable-pitch :foreground "#E6DB74" :height 1.0))))
  '(org-link ((t (:background "dark slate blue" :foreground "gainsboro" :box (:line-width 2 :color "grey75" :style released-button) :underline nil :family "UbuntuMono"))))
- '(org-table ((t (:background "gray20" :foreground "#A6E22E" :box (:line-width 1 :color "grey75"))))))
+ '(org-table ((t (:background "gray20" :foreground "#A6E22E" :box (:line-width 1 :color "grey75")))))
+ '(slime-highlight-edits-face ((t (:background "gray18")))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -526,6 +539,10 @@
       ("\\section{%s}" . "\\section*{%s}")
       ("\\subsection{%s}" . "\\subsection*{%s}")
       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))))
+ '(safe-local-variable-values
+   (quote
+    ((Package . CL-USER)
+     (Syntax . COMMON-LISP))))
  '(send-mail-function (quote mailclient-send-it))
  '(shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda nil (eshell)))))
  '(shell-pop-universal-key "C-t")
