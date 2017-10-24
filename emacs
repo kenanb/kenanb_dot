@@ -5,8 +5,7 @@
   (normal-top-level-add-subdirs-to-load-path))
 (setq package-archives 
       '(("gnu"          . "http://elpa.gnu.org/packages/")
-        ("melpa"        . "http://melpa.milkbox.net/packages/")
-        ("melpa-stable" . "http://melpa-stable.milkbox.net/packages")))
+        ("melpa"        . "http://melpa.org/packages/")))
 (package-initialize)
 (defun ensure-package-installed (&rest packages)
   (mapcar
@@ -20,26 +19,26 @@
 (or (file-exists-p package-user-dir)
     (package-refresh-contents))
 (ensure-package-installed
- 'ac-slime 'auto-complete 'paredit 'elpy 'better-defaults 'wgrep
- 'redshank 'string-inflection 'markdown-mode 'magit 'imenu 'flycheck
- 'lua-mode 'helm 'highlight-indentation 'iedit 'twittering-mode
- 'emms 'pov-mode 'auctex 'undo-tree 'rainbow-mode 'monokai-theme
- 'litable 'adaptive-wrap 'rainbow-delimiters 'shell-pop 'ggtags
- 'shell-switcher 'dired+ 'popwin 'popup 'command-log-mode 'help-fns+
- 'latex-preview-pane 'smart-mode-line 'flymake-json 'fold-dwim-org)
+ 'ac-slime           'auto-complete     'paredit               'elpy
+ 'better-defaults    'wgrep             'redshank              'string-inflection
+ 'markdown-mode      'magit             'imenu                 'flycheck
+ 'lua-mode           'helm              'highlight-indentation 'iedit
+ 'emms               'auctex            'undo-tree             'rainbow-mode
+ 'shell-pop          'ggtags            'shell-switcher        'dired+
+ 'popwin             'popup             'command-log-mode      'help-fns+
+ 'latex-preview-pane 'flymake-json      'fold-dwim-org         'adaptive-wrap
+ 'litable            'rainbow-delimiters)
 
 ;; GLOBAL
 (require 'dired+)
 (require 'shell-pop)
 (require 'auto-complete)
 (require 'auto-complete-config)
-(require 'smart-mode-line)
 (require 'epa-file)
+(setq indent-tabs-mode nil)
 (epa-file-enable)
-(setq sml/no-confirm-load-theme t)
-(setq sml/theme 'dark)
-(load-theme 'monokai t)
-(sml/setup)
+(tool-bar-mode 0)
+(menu-bar-mode 0)
 (setq org-replace-disputed-keys t) ; only works if set before Helm loads org.el.
 (autoload 'gtags-mode "gtags" "" t)
 (ac-config-default)
@@ -56,15 +55,17 @@
       scroll-conservatively 10000
       inhibit-startup-message t
       auto-window-vscroll nil)
-(set-frame-parameter (selected-frame) 'alpha '(99 99))
-(add-to-list 'default-frame-alist '(alpha 99 99))
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 (setq mouse-wheel-progressive-speed nil)
-(set-default-font "Fixed-8")
-(add-to-list 'default-frame-alist '(font . "Fixed-8"))
+(load-theme 'misterioso)
+(set-default-font "6x13")
+(set-default-font "Misc Tamsyn-10")
+(add-to-list 'default-frame-alist '(font . "Misc Tamsyn-8"))
+;; (set-default-font "Ubuntu Mono")
+;; (add-to-list 'default-frame-alist '(font . "Ubuntu Mono"))
 (column-number-mode 1)
 (set-window-fringes nil 0 0)
-(global-hl-line-mode 1)
+(global-hl-line-mode 0)
 ;; (setq compilation-scroll-output t)
 (setq compilation-scroll-output 'first-error)
 (add-hook 'visual-line-mode-hook '(lambda () (adaptive-wrap-prefix-mode (if visual-line-mode 1 -1))))
@@ -82,6 +83,15 @@
 (setq auto-save-timeout 60)
 ;; Make backups of files, even when they're in version control
 (setq vc-make-backup-files t)
+(setq
+   backup-by-copying t      ; don't clobber symlinks
+   backup-directory-alist
+    '(("." . "~/.emacs.d/backups/"))    ; don't litter my fs tree
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   version-control t)       ; use versioned backups
+
 ;; windmove config
 (windmove-default-keybindings)
 (setq windmove-wrap-around t)
@@ -94,6 +104,7 @@
 (global-set-key (kbd "S-C-<up>") 'enlarge-window)
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+(global-set-key (kbd "<f5>") 'string-inflection-all-cycle)
 
 ;; BUFFER SWITCHING
 (defun regexp-next-buffer ()
@@ -135,7 +146,7 @@
 (require 'helm-config)
 (require 'helm-eshell)
 (helm-mode 1)
-(helm-adaptative-mode t)
+(helm-adaptive-mode t)
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-c h") 'helm-command-prefix)
 (global-unset-key (kbd "C-x c"))
@@ -212,14 +223,15 @@
                slime-fancy-inspector
                slime-references
                slime-xref-browser
-               slime-highlight-edits
+               ;; slime-highlight-edits
                slime-scratch
                slime-trace-dialog
                slime-sprof
                slime-indentation
                slime-media))
-;; (setq slime-complete-symbol-function 'slime-fuzzy-complete-symbol)
-;; (setq slime-fuzzy-completion-in-place t)
+(setq slime-scratch-file "~/dev/lisp/local-projects/scratch.lisp")
+(setq slime-complete-symbol-function 'slime-fuzzy-complete-symbol)
+(setq slime-fuzzy-completion-in-place t)
 (eval-after-load "redshank-loader"
   `(redshank-setup '(lisp-mode-hook slime-repl-mode-hook) t))
 (add-hook 'emacs-lisp-mode-hook #'turn-on-eldoc-mode)
@@ -255,6 +267,8 @@
 (require 'semantic/sb)
 (semantic-mode 1)
 (require 'fold-dwim-org)
+(load "/usr/share/clang/clang-format.el")
+(global-set-key [C-M-tab] 'clang-format-region)
 (setq-default
  fill-column 79
  tramp-default-method "ssh"
@@ -270,7 +284,12 @@
 (add-hook 'c-mode-common-hook '(lambda () (auto-fill-mode 1)))
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
+;; ASM
+(add-to-list 'auto-mode-alist '("\\.asm$" . asm-mode))
+(add-to-list 'auto-mode-alist '("\\.z80$" . asm-mode))
+
 ;; PYTHON
+(setenv "IPY_TEST_SIMPLE_PROMPT" "1")
 (elpy-enable)
 (elpy-use-ipython)
 (add-hook 'python-mode-hook #'ggtags-mode)
@@ -286,11 +305,6 @@
 (add-hook 'lua-mode-hook #'(lambda () (gtags-mode 1)))
 (add-hook 'lua-mode-hook #'ggtags-mode)
 (add-hook 'lua-mode-hook #'(lambda () (add-to-list 'ac-sources 'ac-source-gtags)))
-
-;; POVRAY
-(autoload 'pov-mode "pov-mode" t)
-(add-to-list 'auto-mode-alist '("\\.pov\\'" . pov-mode))
-(add-to-list 'auto-mode-alist '("\\.inc\\'" . pov-mode))
 
 ;; MARKDOWN
 (autoload 'markdown-mode "markdown-mode" t)
@@ -311,7 +325,6 @@
 (require 'ox-latex)
 (require 'org-mouse)
 (require 'ledger-mode)
-(require 'ob-lua)
 (add-to-list 'load-path "/usr/share/asymptote/")
 (load-file "/usr/share/asymptote/asy-init.el")
 (setq org-startup-indented t
@@ -332,15 +345,6 @@
 (setq org-agenda-include-diary t)
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
 (setq org-default-notes-file "~/.notes.org")
-(defun org-tangle-run-linux ()
-  (interactive)
-  (make-local-variable 'compilation-read-command)
-  (setq compilation-read-command nil)
-  (org-babel-tangle (current-buffer))
-  (compile "cocos run -p linux"))
-(add-hook 'org-mode-hook
-  (lambda ()
-    (define-key org-mode-map (kbd "C-z C-c") 'org-tangle-run-linux)))
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c a") 'org-agenda)
@@ -431,143 +435,103 @@
  ;; If there is more than one, they won't work right.
  '(org-block-begin-line ((t (:inherit org-meta-line :background "gray20" :foreground "#75715E" :box (:line-width 1 :color "grey75") :slant italic))) t)
  '(org-block-end-line ((t (:inherit org-meta-line))) t)
- '(org-level-1 ((t (:inherit variable-pitch :foreground "#FD971F" :height 1.1))))
- '(org-level-2 ((t (:inherit variable-pitch :foreground "#A6E22E" :height 1.0))))
- '(org-level-3 ((t (:inherit variable-pitch :foreground "#66D9EF" :height 1.0))))
- '(org-level-4 ((t (:inherit variable-pitch :foreground "#E6DB74" :height 1.0))))
  '(org-link ((t (:background "dark slate blue" :foreground "gainsboro" :box (:line-width 2 :color "grey75" :style released-button) :underline nil :family "UbuntuMono"))))
  '(org-table ((t (:background "gray20" :foreground "#A6E22E" :box (:line-width 1 :color "grey75")))))
- '(slime-highlight-edits-face ((t (:background "gray18")))))
+ '(slime-highlight-edits-face ((t (:background "black")))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
  '(compilation-message-face (quote default))
  '(compilation-skip-threshold 2)
  '(doc-view-continuous t)
- '(fci-rule-color "#49483E")
- '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
- '(highlight-tail-colors
-   (quote
-    (("#49483E" . 0)
-     ("#67930F" . 20)
-     ("#349B8D" . 30)
-     ("#21889B" . 50)
-     ("#968B26" . 60)
-     ("#A45E0A" . 70)
-     ("#A41F99" . 85)
-     ("#49483E" . 100))))
  '(magit-diff-use-overlays nil)
  '(magit-use-overlays nil)
  '(org-babel-load-languages
    (quote
-    ((emacs-lisp . t)
-     (asymptote . t)
-     (awk . t)
-     (C . t)
-     (calc . t)
-     (ditaa . t)
-     (dot . t)
-     (gnuplot . t)
-     (latex . t)
-     (ledger . t)
-     (lisp . t)
-     (lua . t)
-     (makefile . t)
-     (maxima . t)
-     (org . t)
-     (python . t)
-     (scheme . t)
-     (sh . t)
-     (sqlite . t))))
- '(org-ditaa-eps-jar-path "/usr/share/java/ditaa-eps/DitaaEps.jar")
- '(org-ditaa-jar-path "/usr/share/java/ditaa/ditaa.jar")
+	((emacs-lisp . t)
+	 (asymptote . t)
+	 (awk . t)
+	 (C . t)
+	 (calc . t)
+	 (dot . t)
+	 (gnuplot . t)
+	 (latex . t)
+	 (ledger . t)
+	 (lisp . t)
+	 (makefile . t)
+	 (maxima . t)
+	 (org . t)
+	 (python . t)
+	 (scheme . t)
+	 (sh . t)
+	 (sqlite . t))))
  '(org-file-apps
    (quote
-    ((auto-mode . emacs)
-     ("\\.mm\\'" . default)
-     ("\\.x?html?\\'" . default)
-     ("\\.pdf\\'" . "evince %s")
-     ("\\.xcf\\'" . "gimp %s")
-     ("\\.psd\\'" . "gimp %s")
-     ("\\.kra\\'" . "krita %s")
-     ("\\.ora\\'" . "krita %s")
-     ("\\.blend\\'" async-shell-command
-      (concat "blender " file)))))
+	((auto-mode . emacs)
+	 ("\\.mm\\'" . default)
+	 ("\\.x?html?\\'" . default)
+	 ("\\.pdf\\'" . "evince %s")
+	 ("\\.xcf\\'" . "gimp %s")
+	 ("\\.psd\\'" . "gimp %s")
+	 ("\\.kra\\'" . "krita %s")
+	 ("\\.ora\\'" . "krita %s")
+	 ("\\.blend\\'" async-shell-command
+	  (concat "blender " file)))))
  '(org-html-html5-fancy t)
  '(org-latex-classes
    (quote
-    (("extarticle" "\\documentclass{extarticle}"
-      ("\\section{%s}" . "\\section*{%s}")
-      ("\\subsection{%s}" . "\\subsection*{%s}")
-      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-      ("\\paragraph{%s}" . "\\paragraph*{%s}")
-      ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-     ("koma-book" "\\documentclass{scrbook}"
-      ("\\section{%s}" . "\\section*{%s}")
-      ("\\subsection{%s}" . "\\subsection*{%s}")
-      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-      ("\\paragraph{%s}" . "\\paragraph*{%s}")
-      ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-     ("koma-article" "\\documentclass{scrartcl}"
-      ("\\section{%s}" . "\\section*{%s}")
-      ("\\subsection{%s}" . "\\subsection*{%s}")
-      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-      ("\\paragraph{%s}" . "\\paragraph*{%s}")
-      ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-     ("article" "\\documentclass[11pt]{article}"
-      ("\\section{%s}" . "\\section*{%s}")
-      ("\\subsection{%s}" . "\\subsection*{%s}")
-      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-      ("\\paragraph{%s}" . "\\paragraph*{%s}")
-      ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-     ("report" "\\documentclass[11pt]{report}"
-      ("\\part{%s}" . "\\part*{%s}")
-      ("\\chapter{%s}" . "\\chapter*{%s}")
-      ("\\section{%s}" . "\\section*{%s}")
-      ("\\subsection{%s}" . "\\subsection*{%s}")
-      ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
-     ("book" "\\documentclass[11pt]{book}"
-      ("\\part{%s}" . "\\part*{%s}")
-      ("\\chapter{%s}" . "\\chapter*{%s}")
-      ("\\section{%s}" . "\\section*{%s}")
-      ("\\subsection{%s}" . "\\subsection*{%s}")
-      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))))
+	(("extarticle" "\\documentclass{extarticle}"
+	  ("\\section{%s}" . "\\section*{%s}")
+	  ("\\subsection{%s}" . "\\subsection*{%s}")
+	  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+	  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+	  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+	 ("koma-book" "\\documentclass{scrbook}"
+	  ("\\section{%s}" . "\\section*{%s}")
+	  ("\\subsection{%s}" . "\\subsection*{%s}")
+	  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+	  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+	  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+	 ("koma-article" "\\documentclass{scrartcl}"
+	  ("\\section{%s}" . "\\section*{%s}")
+	  ("\\subsection{%s}" . "\\subsection*{%s}")
+	  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+	  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+	  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+	 ("article" "\\documentclass[11pt]{article}"
+	  ("\\section{%s}" . "\\section*{%s}")
+	  ("\\subsection{%s}" . "\\subsection*{%s}")
+	  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+	  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+	  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+	 ("report" "\\documentclass[11pt]{report}"
+	  ("\\part{%s}" . "\\part*{%s}")
+	  ("\\chapter{%s}" . "\\chapter*{%s}")
+	  ("\\section{%s}" . "\\section*{%s}")
+	  ("\\subsection{%s}" . "\\subsection*{%s}")
+	  ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
+	 ("book" "\\documentclass[11pt]{book}"
+	  ("\\part{%s}" . "\\part*{%s}")
+	  ("\\chapter{%s}" . "\\chapter*{%s}")
+	  ("\\section{%s}" . "\\section*{%s}")
+	  ("\\subsection{%s}" . "\\subsection*{%s}")
+	  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))))
+ '(package-selected-packages
+   (quote
+	(org ecb wgrep undo-tree string-inflection shell-switcher shell-pop redshank rainbow-mode rainbow-delimiters popwin paredit markdown-mode magit lua-mode litable latex-preview-pane iedit help-fns+ helm ggtags fold-dwim-org flymake-json flycheck emms elpy dired+ command-log-mode better-defaults auctex adaptive-wrap ac-slime)))
  '(safe-local-variable-values
    (quote
-    ((Package . CL-USER)
-     (Syntax . COMMON-LISP))))
+	((Package . FOSSICKER)
+	 (Package . CL-USER)
+	 (Syntax . COMMON-LISP))))
  '(send-mail-function (quote mailclient-send-it))
  '(shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda nil (eshell)))))
  '(shell-pop-universal-key "C-t")
- '(shell-pop-window-height 15)
+ '(shell-pop-window-size 15)
  '(vc-annotate-background nil)
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#F92672")
-     (40 . "#CF4F1F")
-     (60 . "#C26C0F")
-     (80 . "#E6DB74")
-     (100 . "#AB8C00")
-     (120 . "#A18F00")
-     (140 . "#989200")
-     (160 . "#8E9500")
-     (180 . "#A6E22E")
-     (200 . "#729A1E")
-     (220 . "#609C3C")
-     (240 . "#4E9D5B")
-     (260 . "#3C9F79")
-     (280 . "#A1EFE4")
-     (300 . "#299BA6")
-     (320 . "#2896B5")
-     (340 . "#2790C3")
-     (360 . "#66D9EF"))))
  '(vc-annotate-very-old-color nil)
  '(warning-suppress-types (quote ((undo discard-info)))))
 (put 'downcase-region 'disabled nil)

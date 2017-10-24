@@ -12,8 +12,6 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
 fi
 
 xbindkeys
-setxkbmap -layout tr -option ctrl:swapcaps
-xsetwacom --set 8 MapToOutput "1440x900+0+0"
-./.fehbg
+setxkbmap -option ctrl:swapcaps
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 exec i3

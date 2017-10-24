@@ -1,11 +1,13 @@
 # Write your default config options here!
-
-
+# vo=vdpau
+# vc=ffh264vdpau,ffmpeg12vdpau,ffodivxvdpau,ffwmv3vdpau,ffvc1vdpau,ffhevcvdpau
+softvol-max=200
+softvol=yes
 # Set font.
 font=/usr/share/fonts/TTF/DejaVuSansCondensed.ttf
 
 # Set font encoding.
-#subcp=ISO8859-9
+subcp=ISO8859-9
 
 # Set subtitle file encoding.
 unicode=yes
