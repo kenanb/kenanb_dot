@@ -85,6 +85,9 @@
 (require 'saveplace)
 (require 'ivy)
 (require 'emms-setup)
+(require 'windmove)
+(windmove-default-keybindings)
+(setq windmove-wrap-around t)
 (emms-all)
 (emms-default-players)
 (epa-file-enable)
@@ -105,6 +108,12 @@
 (add-hook 'visual-line-mode-hook
           '(lambda () (adaptive-wrap-prefix-mode (if visual-line-mode 1 -1))))
 (put 'dired-find-alternate-file 'disabled nil)
+(global-unset-key (kbd "C-<left>")) ; Confusing because behaviour is different it paredit.
+(global-unset-key (kbd "C-<right>")) ; Confusing because behaviour is different it paredit.
+(global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "S-C-<down>") 'shrink-window)
+(global-set-key (kbd "S-C-<up>") 'enlarge-window)
 (global-set-key (kbd "RET")     'newline-and-indent)
 (global-set-key (kbd "C-c m")   'magit-status)
 (global-set-key (kbd "C-c f")   'find-function)
